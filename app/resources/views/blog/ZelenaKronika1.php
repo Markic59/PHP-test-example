@@ -1,1 +1,4 @@
-<?php
+<!DOCTYPE HTML>
+<HTML>
+<H1>ŽUTA KRONIKA</H1>
+</HTML>
