@@ -13,4 +13,5 @@ spl_autoload_register('autoload');
 use \app\router\Router;
 
 include __DIR__ . "/../app/routes/routes.php";
+include "C:/xampp/htdocs/praksa/vendor/autoload.php";
 Router::handle();

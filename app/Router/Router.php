@@ -4,6 +4,10 @@ namespace app\Router;
 
 use app\http\controllers\contact\ContactController;
 use app\http\controllers\blog\BlogController;
+use Illuminate\Http\Request;
+use ReflectionFunction;
+use ReflectionMethod;
+use ReflectionParameter;
 
 class Router{
     /**
@@ -62,6 +66,7 @@ class Router{
     public static function handle()
     {
         $methodType = $_SERVER["REQUEST_METHOD"];
+        $request = Request::capture();
         switch ($methodType) {
             case 'GET':
                 $routes = self::instance()->get;
@@ -84,6 +89,7 @@ class Router{
             if (count($tokens) === count($controllerChooserArray)) {
 
                 for($index = 0; $index < count($tokens); ++$index){
+
                     if($tokens[$index] === $controllerChooserArray[$index]){
                         continue;
                     }
@@ -100,7 +106,17 @@ class Router{
                     $handleController = self::handleController($route);
                     $class = $handleController["class"];
                     $function = $handleController["function"];
-                    call_user_func_array($class . "::" .$function, $variables);
+                    $vars = new ReflectionMethod($class, $function);
+                    $params = $vars->getParameters();
+
+                    if(end($params) !== false && (end($params)->getClass()) !== null) {
+                        if (end($params)->getClass()->getName() === "Illuminate\Http\Request") {
+                            $variables[] = $request;
+                        }
+
+                    }
+
+                    call_user_func_array($class . "::" . $function, $variables);
                 }
             }
 
