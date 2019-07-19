@@ -5,6 +5,7 @@ namespace app\http\controllers\contact;
 
 use app\core\View;
 use Illuminate\Http\Request;
+use app\Factories\Validator\ValidatorFactory;
 
 class ContactController{
 
@@ -12,11 +13,9 @@ class ContactController{
         View::view("contact.contact");
     }
 
-    public function postEmail()
+    public function postEmail(Request $request)
     {
-        if ($request !== null) {
-        var_dump($request->all());
-        }
+
     }
 
 }

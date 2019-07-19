@@ -2,12 +2,14 @@
 
 namespace app\Router;
 
+use app\Factories\Validator\ValidatorFactory;
 use app\http\controllers\contact\ContactController;
 use app\http\controllers\blog\BlogController;
+use app\Http\Requests\SendEmailRequest;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 use ReflectionFunction;
 use ReflectionMethod;
-use ReflectionParameter;
 
 class Router{
     /**
@@ -66,13 +68,32 @@ class Router{
     public static function handle()
     {
         $methodType = $_SERVER["REQUEST_METHOD"];
-        $request = Request::capture();
+        $request = SendEmailRequest::capture();
+
+
         switch ($methodType) {
             case 'GET':
                 $routes = self::instance()->get;
                 break;
             case 'POST':
                 $routes = self::instance()->post;
+                if($request !== null){
+                    $validator = ValidatorFactory::make($request->all(),$request->getRules(),
+                        $request->getMessages());
+                    try {
+                        foreach ($validator->messages()->getMessages() as $value) {
+                            echo $value[0];
+                            if ($value === false) {
+                                return;
+                            }
+                        }
+                    }
+                    catch(ValidationException $e){
+                        $e->errorBag;
+                        echo "el nada";
+                        return;
+                    }
+                }
                 break;
         }
 

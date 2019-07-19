@@ -1,7 +1,9 @@
 {
   "require" : {
       "monolog/monolog": "1.0.*",
-      "illuminate/http":  "*"
+      "illuminate/http":  "*",
+      "illuminate/validation": "*",
+      "illuminate/foundation": "*"
     }
 
 }
